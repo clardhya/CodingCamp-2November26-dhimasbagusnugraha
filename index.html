@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spendly - Personal Finance Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="header-content">
+                <div class="header-text">
+                    <h1 class="app-title">Spendly</h1>
+                    <p class="app-subtitle">Modern Personal Finance Dashboard</p>
+                </div>
+                <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">
+                    <span class="theme-icon">🌙</span>
+                </button>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <!-- Expense Form Card -->
+            <section class="form-section dashboard-card">
+                <div class="card-header">
+                    <h2 class="card-title">Add New Expense</h2>
+                </div>
+                <div class="card-content">
+                    <form id="expenseForm" class="expense-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="itemName">Item Name</label>
+                                <input type="text" id="itemName" name="itemName" class="form-input" placeholder="Lunch, Taxi, Movie..." required>
+                                <div class="error-message" id="itemNameError"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="amount">Amount (IDR)</label>
+                                <input type="number" id="amount" name="amount" class="form-input" placeholder="13500" min="1" step="1" required>
+                                <div class="error-message" id="amountError"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="category">Category</label>
+                                <select id="category" name="category" class="form-select" required>
+                                    <option value="" disabled selected>Select category</option>
+                                    <option value="Food">Food</option>
+                                    <option value="Transport">Transport</option>
+                                    <option value="Fun">Fun</option>
+                                </select>
+                                <div class="error-message" id="categoryError"></div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>&nbsp;</label>
+                                <button type="submit" class="submit-btn">Add Expense</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Category Management Card -->
+            <section class="categories-section dashboard-card">
+                <div class="card-header">
+                    <h2 class="card-title">Manage Categories</h2>
+                </div>
+                <div class="card-content">
+                    <div class="categories-management">
+                        <div class="add-category-form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="newCategoryName">New Category</label>
+                                    <input type="text" id="newCategoryName" class="form-input" placeholder="Enter category name">
+                                    <div class="error-message" id="categoryNameError"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label>&nbsp;</label>
+                                    <button id="addCategoryBtn" class="submit-btn">Add Category</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="categories-list-container">
+                            <h3 class="subtitle">Available Categories</h3>
+                            <div id="categoriesList" class="categories-list">
+                                <!-- Categories will be dynamically inserted here -->
+                                <div class="default-categories">
+                                    <span class="category-tag food">Food</span>
+                                    <span class="category-tag transport">Transport</span>
+                                    <span class="category-tag fun">Fun</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Total Expenses Card -->
+            <section class="summary-section dashboard-card">
+                <div class="card-header">
+                    <h2 class="card-title">Total Expenses</h2>
+                </div>
+                <div class="card-content">
+                    <div class="total-display">
+                        <span class="total-label">Current Balance</span>
+                        <span id="totalAmount" class="total-amount">Rp 0</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Monthly Summary Card -->
+            <section class="monthly-section dashboard-card">
+                <div class="card-header">
+                    <h2 class="card-title">Monthly Summary</h2>
+                </div>
+                <div class="card-content">
+                    <div class="monthly-controls">
+                        <button id="prevMonthBtn" class="month-nav-btn" aria-label="Previous month">‹</button>
+                        <div class="month-display">
+                            <span id="currentMonthYear">November 2026</span>
+                        </div>
+                        <button id="nextMonthBtn" class="month-nav-btn" aria-label="Next month">›</button>
+                    </div>
+                    <div class="monthly-total">
+                        <div class="monthly-total-label">Monthly Total</div>
+                        <div id="monthlyTotalAmount" class="monthly-total-amount">Rp 0</div>
+                    </div>
+                    <div class="monthly-stats">
+                        <div class="stat-item">
+                            <div class="stat-label">Transactions</div>
+                            <div id="monthlyTransactionCount" class="stat-value">0</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Average</div>
+                            <div id="monthlyAverageAmount" class="stat-value">Rp 0</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Expense Distribution Card -->
+            <section class="chart-section dashboard-card">
+                <div class="card-header">
+                    <h2 class="card-title">Expense Distribution</h2>
+                </div>
+                <div class="card-content">
+                    <div class="chart-container">
+                        <canvas id="expenseChart"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Recent Transactions Card -->
+            <section class="transactions-section dashboard-card">
+                <div class="card-header">
+                    <h2 class="card-title">Recent Transactions</h2>
+                </div>
+                <div class="card-content">
+                    <div class="transactions-container">
+                        <div id="transactionsList" class="transactions-list">
+                            <!-- Transactions will be dynamically inserted here -->
+                            <div class="empty-state">
+                                <p>No expenses yet. Add your first expense above!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <p>Spendly Personal Expense Tracker &copy; 2026</p>
+        </footer>
+    </div>
+
+    <script src="js/script.js"></script>
+</body>
+</html>
